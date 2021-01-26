@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>CoinMarketCap</title>
+</head>
+<body>
+    
+    <div id="coins">
+        
+    </div>
+
+
+    
+    <script type="text/javascript">
+        // api key
+        const api = {
+            key: '073b423a-6cf5-433d-8dfc-af292edf4f9e'
+        };
+
+        function formataData(date){
+            let data = new Date(date)
+            return data.getDate()  + "/" +( data.getMonth() + 1) + "/" + data.getFullYear()
+        }
+
+        fetch('https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?CMC_PRO_API_KEY=' +
+        api.key)
+            .then((response) => {
+                if (!response.ok) throw new Error('Erro ao executar a requisição, status: ', response.status);
+                return response.json();
+            })
+            .then((data) =>{
+                var texto = '';
+
+                console.log(data);
+                for(index = 0; index < 10; index++){
+
+                    texto += `
+                    <div class="media mt-2 ml-2">
+                        <img src="img/coin.jpg" class="align-self-center mr-3" width="100" height="100" alt="logo coin">
+                        <div class="media-bory">
+                            <h5 class="mt-2">${data.data[index].name}</h5>
+                            <p class="mt-1 mb-0">
+                                ${data.data[index].symbol}
+                            </p>
+                            <span class="badge badge-danger mt-0 bt-0">
+                                ${formataData(data.data[index].first_historical_data)}
+                            </span>
+                        </div>
+                    </div>
+
+                    `;
+
+                    document.getElementById("coins").innerHTML = texto;
+                }
+            })
+            .catch((error) => console.error(error.message));
+
+    </script>
+</body>
+</html>
